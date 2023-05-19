@@ -34,6 +34,8 @@
 ;;; Requisites and Declarations
 (eval-when-compile (require 'cl-lib))
 (require 'ox)
+(require 'ob-R)
+(require 'ox-md)
 
 (declare-function org-babel-expand-body:R "ob-R.el" )
 
@@ -243,8 +245,8 @@ functions can find them in `R-HEADERS-ATTR'. "
 		(append
 		 `((:results . "replace")
 		   (:wrap . ,(if inline "ravel" "EXPORT RAVEL"))
-		   (:exports . "results")			 
-		   (:engine . ,engine-cdr)) 			 
+		   (:exports . "results")
+		   (:engine . ,engine-cdr))
 		 n2r))))
 
 
@@ -364,11 +366,11 @@ Possibly find it in properties or use `org-ravel-style' by
                style-from-header)))
 
 (defcustom org-ravel-menu-key ?r
-  "Key to access the Ravel Exporters via the `org-export-dispatch menu. 
-Customizing this key may be needed to avoid conflicts with 
+  "Key to access the Ravel Exporters via the `org-export-dispatch menu.
+Customizing this key may be needed to avoid conflicts with
 other export backends.
   After customizing the key will take effect once ox-ravel is re-initialized,
-  i.e. you must either save the value and restart emacs or reload `ox-ravel'. 
+  i.e. you must either save the value and restart emacs or reload `ox-ravel'.
   "
     :type '(restricted-sexp :match-alternatives (characterp)))
 
@@ -557,7 +559,7 @@ block."
   "Create a code cell (aka chunk) for SRC-CODE with optional LABEL
 using options in RAVEL possibly superceded by those in
 ATTR-RAVEL. The default engine, `R`, may be overridden by an
-`engine = 'Rcpp'` style specification in RAVEL or ATTR-RAVEL." 
+`engine = 'Rcpp'` style specification in RAVEL or ATTR-RAVEL."
   (let*
 ((label
 	(if label
@@ -614,7 +616,7 @@ ATTR-RAVEL. The default engine, `R`, may be overridden by an
 ;; return their content. For other blocks/snippets, they fall back to the
 ;; transcoders for the parent backend.
 
-;; *** defun-org-ravel-export-block 
+;; *** defun-org-ravel-export-block
 
 
 ;; #+NAME: defun-org-ravel-export-block
@@ -758,7 +760,7 @@ discouraged as it can corrupt the cache used by the
 `org-ravel-run' locally.  Otherwise, an attempt will be made to
 replace it with `org-ravel-run' or `org-ravel-engines'.  STYLE
 will set `org-ravel-style' if non-nil, otherwise
-`org-ravel-style' or the default for BACKEND will be used.  
+`org-ravel-style' or the default for BACKEND will be used.
 
 This function can be run by Babel to produce a string that is
 used in a Babel src block.
@@ -905,7 +907,7 @@ The arguments are:
                    `((,menu-key ,(concat menu-label " file")
                                 (lambda (a s v b)
                                   (org-ravel-export-to-file
-                                 ,ravel-backend ,fileout a s v b nil 
+                                 ,ravel-backend ,fileout a s v b nil
                                  nil nil ,style-default)))
                      ,(if bufferout
                           `(,(upcase menu-key) ,(concat menu-label " buffer")
@@ -1006,7 +1008,7 @@ The arguments are:
 			(:with-biblinks nil "biblinks" t t)))
      (org-ravel-define-exporter
 'ravel-markdown
-'rmd ?m "Ravel-markdown" "md" nil t nil 
+'rmd ?m "Ravel-markdown" "md" nil t nil
 '((:filter-latex-fragment . org-ravel-filter-cite-as-pandoc)))))
 
 
@@ -1024,7 +1026,7 @@ The arguments are:
 
 (defun org-ravel-filter-cite-as-pandoc (text back-end info)
   "Translate citations in latex format (i.e. \cite{id}) into
-citations in pandoc format (i.e. [@id]). 
+citations in pandoc format (i.e. [@id]).
 
 Note, loading `ox-bibtex' transforms all latex/bibtex citations
 into html links, so do not load it if this format is desired."
@@ -1037,10 +1039,10 @@ into html links, so do not load it if this format is desired."
 
 
 (defun org-ravel--yaml-header (info)
-  "A minimal header/footer is CONSed to value in 
+  "A minimal header/footer is CONSed to value in
     :with-auto-yaml-header from INFO."
   (let ((rmd_yaml (plist-get info :with-auto-yaml-header)))
-    (when rmd_yaml 
+    (when rmd_yaml
 (let* ((with-title  (and (plist-get info :with-title)
 			 (plist-get info :title)))
 	     (with-author  (and (plist-get info :with-author)
@@ -1049,7 +1051,7 @@ into html links, so do not load it if this format is desired."
 			(plist-get info :date)))
 	     (title  (and with-title
 			  (format "title: %s\n"
-				  (org-element-interpret-data with-title))))	
+				  (org-element-interpret-data with-title))))
 	     (author  (and with-author
 			   (format "author: %s\n"
 				   (org-element-interpret-data with-author))))
@@ -1068,7 +1070,7 @@ the title, author and date as determined from their options."
   (let* ((rmd_yaml (org-ravel--yaml-header info))
 	 (auto-first (eq (car rmd_yaml) 'header))
 	 (auto-last (eq (car rmd_yaml) 'footer))
-	 (auto-content (cdr rmd_yaml))	 
+	 (auto-content (cdr rmd_yaml))
 	 (parsed (plist-get info :parse-tree))
 	 (yaml-export-blocks
 	  (apply 'concat (org-element-map parsed 'export-block
@@ -1102,7 +1104,7 @@ the title, author and date as determined from their options."
   (let ((biblinks (plist-get info :with-biblinks)))
     (if (or biblinks (not (featurep 'org-ref)))
 	(org-export-with-backend 'md link contents info)
-(unless 
+(unless
 	  (string= (org-element-property :type link) "bibliography")
 	(org-export-custom-protocol-maybe link contents 'pandoc)))))
 
