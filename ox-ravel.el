@@ -365,7 +365,7 @@ Possibly find it in properties or use `org-ravel-style' by
    (user-error "Ravel-style: %S not found -- Consult `org-ravel-style-alist'"
                style-from-header)))
 
-(defcustom org-ravel-menu-key ?r
+(defcustom org-ravel-menu-key ?R
   "Key to access the Ravel Exporters via the `org-export-dispatch menu.
 Customizing this key may be needed to avoid conflicts with
 other export backends.

@@ -696,7 +696,7 @@ if Rcpp is to be supported. Like `(defalias 'Rcpp-mode 'c++-mode)'
 *** defcustom-org-ravel-menu-key
 
 #+begin_src emacs-lisp
-  (defcustom org-ravel-menu-key ?r
+  (defcustom org-ravel-menu-key ?R
     "Key to access the Ravel Exporters via the `org-export-dispatch menu.
   Customizing this key may be needed to avoid conflicts with
   other export backends.
